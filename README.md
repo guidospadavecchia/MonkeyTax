@@ -12,5 +12,5 @@ Esta API recopila y muestra información de fuentes externas. No se garantiza la
 
 ## 
 <p align="center">
-  <img src="http://ForTheBadge.com/images/badges/built-with-love.svg">
+  <img src="https://madewithlove.vercel.app/ar?heart=true&colorB=%234f94bf&template=for-the-badge">
 </p>
