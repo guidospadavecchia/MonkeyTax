@@ -7,10 +7,12 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["MonkeyTax.API/MonkeyTax.API.csproj", "MonkeyTax.API/"]
+COPY ["src/MonkeyTax.API/MonkeyTax.API.csproj", "MonkeyTax.API/"]
+COPY ["src/MonkeyTax.Application/MonkeyTax.Application.csproj", "MonkeyTax.Application/"]
+COPY ["src/MonkeyTax.Bootstrap/MonkeyTax.Bootstrap.csproj", "MonkeyTax.Bootstrap/"]
 RUN dotnet restore "MonkeyTax.API/MonkeyTax.API.csproj"
 COPY . .
-WORKDIR "/src/MonkeyTax.API"
+WORKDIR "/src/src/MonkeyTax.API"
 RUN dotnet build "MonkeyTax.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
