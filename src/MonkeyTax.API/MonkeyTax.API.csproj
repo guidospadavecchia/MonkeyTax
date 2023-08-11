@@ -18,19 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\styles\styles.css" />
-    <Content Remove="wwwroot\styles\swagger.css" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="wwwroot\assets\logo-title.png" />
+    <None Remove="wwwroot\favicon-16x16.png" />
+    <None Remove="wwwroot\favicon-32x32.png" />
+    <None Remove="wwwroot\favicon.ico" />
     <None Remove="wwwroot\styles\styles.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="wwwroot\assets\logo-title.png" />
-    <EmbeddedResource Include="wwwroot\styles\styles.css" />
-    <EmbeddedResource Include="wwwroot\styles\swagger.css" />
   </ItemGroup>
 
   <ItemGroup>
