@@ -5,5 +5,6 @@
         public required int StatusCode { get; set; }
         public required string ErrorCode { get; set; }
         public required string ErrorMessage { get; set; }
+        public required Exception? Exception { get; set; }
     }
 }

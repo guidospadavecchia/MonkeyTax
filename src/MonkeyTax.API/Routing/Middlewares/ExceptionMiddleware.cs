@@ -34,6 +34,7 @@ namespace MonkeyTax.API.Routing.Middlewares
                     StatusCode = (int)statusCode,
                     ErrorCode = statusCode.ToString(),
                     ErrorMessage = ex?.Message ?? string.Empty,
+                    Exception = ex,
                 };
 
                 var result = JsonSerializer.Serialize(errorResponse);
