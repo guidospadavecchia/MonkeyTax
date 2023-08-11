@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\styles\styles.css" />
+    <Content Remove="wwwroot\styles\swagger.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +30,7 @@
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\assets\logo-title.png" />
     <EmbeddedResource Include="wwwroot\styles\styles.css" />
+    <EmbeddedResource Include="wwwroot\styles\swagger.css" />
   </ItemGroup>
 
   <ItemGroup>

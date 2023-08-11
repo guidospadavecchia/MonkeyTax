@@ -39,6 +39,7 @@ namespace MonkeyTax.Bootstrap.Extensions
                 x.DefaultModelsExpandDepth(-1);
                 x.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
                 x.InjectStylesheet("/styles/styles.css");
+                x.InjectStylesheet("/styles/swagger.css");
                 x.EnableDeepLinking();
                 x.EnableFilter();
             });
