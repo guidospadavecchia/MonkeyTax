@@ -8,6 +8,7 @@ builder.Services.AddLazyCache();
 
 var app = builder.Build();
 app.AddSwaggerConfig(builder.Configuration);
+app.AddMiddlewares();
 app.MapRoutes();
 
 app.Run();
