@@ -62,7 +62,7 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
                 if (splittedText.Length == 2)
                 {
                     string unit = splittedText[0].Replace("$", "ARS");
-                    decimal amount = decimal.TryParse(splittedText[1], CultureInfo.GetCultureInfo("es-AR"), out decimal result) ? result : default;
+                    decimal amount = decimal.TryParse(splittedText[1], NumberStyles.Any, CultureInfo.GetCultureInfo("es-AR"), out decimal result) ? result : default;
                     return new(amount, unit);
                 }
             }

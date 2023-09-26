@@ -1,29 +1,33 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace MonkeyTax.Bootstrap.Extensions
 {
     public static class SwaggerExtensions
     {
-        public static IServiceCollection AddSwaggerServices(this IServiceCollection serviceCollection, IConfiguration cfg)
+        public static IServiceCollection AddSwaggerServices(this IServiceCollection serviceCollection, IConfiguration cfg, Assembly executingAssembly)
         {
             serviceCollection.AddEndpointsApiExplorer();
-            serviceCollection.AddSwaggerGen(x => x.SwaggerDoc("v1", new()
-            {
-                Title = cfg["General:Title"],
-                Description = "API REST de Monotributo AFIP (Argentina)",
-                Contact = new()
+            serviceCollection.AddSwaggerGen(x => {
+                x.SwaggerDoc("v1", new()
                 {
-                    Name = "GitHub Repo",
-                    Url = new(cfg["General:GitHubUrl"]!),
-                },
-                License = new()
-                {
-                    Name = "Tabla de valores Monotributo AFIP",
-                    Url = new(cfg["Scraper:MonotributoUrl"]!),
-                }
-            }));
+                    Title = cfg["General:Title"],
+                    Description = "API REST de Monotributo AFIP (Argentina)",
+                    Contact = new()
+                    {
+                        Name = "GitHub Repo",
+                        Url = new(cfg["General:GitHubUrl"]!),
+                    },
+                    License = new()
+                    {
+                        Name = "Tabla de valores Monotributo AFIP",
+                        Url = new(cfg["Scraper:MonotributoUrl"]!),
+                    }
+                });
+                x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{executingAssembly.GetName().Name}.xml"));
+            });
 
             return serviceCollection;
         }
