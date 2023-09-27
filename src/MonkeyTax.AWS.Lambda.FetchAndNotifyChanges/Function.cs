@@ -1,4 +1,5 @@
 using Amazon.Lambda.Core;
+using Amazon.SimpleNotificationService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MonkeyTax.Application.Monotributo.Model;
@@ -30,6 +31,7 @@ public class Function
         ServiceCollection serviceCollection = new();
         serviceCollection.AddServices(configuration);
         serviceCollection.AddAwsDynamoDb(configuration);
+        serviceCollection.AddScoped<IAmazonSimpleNotificationService, AmazonSimpleNotificationServiceClient>();
 
         return serviceCollection.BuildServiceProvider();
     }

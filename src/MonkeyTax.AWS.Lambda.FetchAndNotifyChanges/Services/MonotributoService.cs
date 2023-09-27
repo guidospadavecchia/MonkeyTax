@@ -2,6 +2,8 @@
 {
     using Amazon.DynamoDBv2;
     using Amazon.DynamoDBv2.Model;
+    using Amazon.SimpleNotificationService;
+    using Amazon.SimpleNotificationService.Model;
     using Configuration;
     using MonkeyTax.Application.Monotributo.Model;
     using Newtonsoft.Json;
@@ -14,11 +16,13 @@
         private readonly RestClient _restClient;
         private readonly MonotributoServiceConfig _config;
         private readonly IAmazonDynamoDB _awsDynamoDbClient;
+        private readonly IAmazonSimpleNotificationService _awsSnsClient;
 
-        public MonotributoService(MonotributoServiceConfig config, IAmazonDynamoDB awsDynamoDbClient)
+        public MonotributoService(MonotributoServiceConfig config, IAmazonDynamoDB awsDynamoDbClient, IAmazonSimpleNotificationService awsSnsClient)
         {
             _config = config;
-            this._awsDynamoDbClient = awsDynamoDbClient;
+            _awsDynamoDbClient = awsDynamoDbClient;
+            _awsSnsClient = awsSnsClient;
             RestClientOptions options = new()
             {
                 ThrowOnAnyError = true,
@@ -79,7 +83,14 @@
                 JObject newJsonContent = JObject.Parse(newContent);
                 if (!JToken.DeepEquals(actualJsonContent, newJsonContent))
                 {
-                    //TODO: Notify
+                    PublishRequest snsJsonRequest = new()
+                    {
+                        TopicArn = _config.PublishTopicArn,
+                        Subject = _config.PublishSubject,
+                        MessageStructure = "json",
+                        Message = BuildPublishMessage(actualContent, newContent),
+                    };
+                    await _awsSnsClient.PublishAsync(snsJsonRequest, cancellationToken);
                 }
                 else
                 {
@@ -107,6 +118,27 @@
                 ["content"] = new AttributeValue { S = content }
             };
             await _awsDynamoDbClient.PutItemAsync(_config.TableName, values, cancellationToken);
+        }
+
+        private string BuildPublishMessage(string actualContent, string newContent)
+        {
+            string message = _config.PublishMessage;
+            var jsonMessage = new
+            {
+                Actual = actualContent,
+                New = newContent,
+            };
+            Dictionary<string, object> messageJsonResponse = new()
+            {
+                { "default", message },
+                { "email", message },
+                { "email-json", message },
+                { "http", jsonMessage },
+                { "https", jsonMessage },
+                { "sqs", jsonMessage },
+            };
+
+            return JsonConvert.SerializeObject(messageJsonResponse);
         }
 
         #endregion

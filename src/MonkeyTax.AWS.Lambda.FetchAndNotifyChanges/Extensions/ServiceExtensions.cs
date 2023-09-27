@@ -14,6 +14,9 @@ namespace MonkeyTax.AWS.DynamoDB.Extensions
                 BaseUrl = configuration["API:BaseUrl"]!,
                 GetCategoriesUrl = configuration["API:GetCategories"]!,
                 TableName = configuration["AWS:DynamoDB:TableName"]!,
+                PublishTopicArn = configuration["AWS:SNS:TopicArn"]!,
+                PublishSubject = configuration["AWS:SNS:Subject"]!,
+                PublishMessage = configuration["AWS:SNS:Message"]!,
             };
             serviceCollection.AddSingleton(monotributoServiceConfig);
             serviceCollection.AddScoped<MonotributoService>();
