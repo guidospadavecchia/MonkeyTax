@@ -2,7 +2,7 @@
 {
     public sealed class MonotributoIntegratedTax
     {
-        public required MonotributoUnit<decimal>? Servicios { get; set; }
-        public required MonotributoUnit<decimal>? VentaCosasMuebles { get; set; }
+        public MonotributoUnit<decimal>? Servicios { get; set; }
+        public MonotributoUnit<decimal>? VentaCosasMuebles { get; set; }
     }
 }

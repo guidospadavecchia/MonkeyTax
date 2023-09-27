@@ -5,6 +5,6 @@ namespace MonkeyTax.Application.UserAgents.Model
     public sealed class UserAgent
     {
         [JsonPropertyName("ua")]
-        public required string Value { get; set; }
+        public string Value { get; set; } = null!;
     }
 }

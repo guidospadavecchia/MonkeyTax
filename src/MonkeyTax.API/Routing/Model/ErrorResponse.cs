@@ -2,9 +2,9 @@
 {
     public class ErrorResponse
     {
-        public required int StatusCode { get; set; }
-        public required string ErrorCode { get; set; }
-        public required string ErrorMessage { get; set; }
-        public required Exception? Exception { get; set; }
+        public int StatusCode { get; set; }
+        public string ErrorCode { get; set; } = null!;
+        public string ErrorMessage { get; set; } = null!;
+        public Exception? Exception { get; set; }
     }
 }

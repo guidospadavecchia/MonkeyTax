@@ -2,16 +2,16 @@
 {
     public sealed class MonotributoCategory
     {
-        public required string Categoria { get; set; }
-        public required MonotributoUnit<decimal>? IngresosBrutosAnuales { get; set; }
-        public required string Actividad { get; set; }
-        public required string CantidadMinimaDeEmpleados { get; set; }
-        public required MonotributoUnit<int>? SuperficieMaximaAfectada { get; set; }
-        public required MonotributoUnit<int>? EnergiaElectricaMaximaAnual { get; set; }
-        public required MonotributoUnit<decimal>? AlquileresDevengadosAnuales { get; set; }
-        public required MonotributoUnit<decimal>? PrecioUnitarioMaximoVentaCosasMuebles { get; set; }
-        public required MonotributoIntegratedTax ImpuestoIntegrado { get; set; }
-        public required MonotributoMonthlyContributions AportesMensuales { get; set; }
-        public required MonotributoMonthlyCosts CostosMensuales { get; set; }
+        public string Categoria { get; set; } = null!;
+        public MonotributoUnit<decimal>? IngresosBrutosAnuales { get; set; }
+        public string Actividad { get; set; } = null!;
+        public string CantidadMinimaDeEmpleados { get; set; } = null!;
+        public MonotributoUnit<int>? SuperficieMaximaAfectada { get; set; }
+        public MonotributoUnit<int>? EnergiaElectricaMaximaAnual { get; set; }
+        public MonotributoUnit<decimal>? AlquileresDevengadosAnuales { get; set; }
+        public MonotributoUnit<decimal>? PrecioUnitarioMaximoVentaCosasMuebles { get; set; }
+        public MonotributoIntegratedTax ImpuestoIntegrado { get; set; } = null!;
+        public MonotributoMonthlyContributions AportesMensuales { get; set; } = null!;
+        public MonotributoMonthlyCosts CostosMensuales { get; set; } = null!;
     }
 }

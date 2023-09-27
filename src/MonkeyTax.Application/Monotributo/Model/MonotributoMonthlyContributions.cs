@@ -2,7 +2,7 @@
 {
     public sealed class MonotributoMonthlyContributions
     {
-        public required MonotributoUnit<decimal>? SistemaPrevisional { get; set; }
-        public required MonotributoUnit<decimal>? ObraSocial { get; set; }
+        public MonotributoUnit<decimal>? SistemaPrevisional { get; set; }
+        public MonotributoUnit<decimal>? ObraSocial { get; set; }
     }
 }

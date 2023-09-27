@@ -2,7 +2,7 @@
 {
     public sealed class MonotributoServiceConfig
     {
-        public required string MonotributoUrl { get; set; }
-        public required Dictionary<string, string> Headers { get; set; }
+        public string MonotributoUrl { get; set; } = null!;
+        public Dictionary<string, string> Headers { get; set; } = new();
     }
 }

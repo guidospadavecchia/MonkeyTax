@@ -2,11 +2,11 @@
 {
     internal class MonotributoServiceConfig
     {
-        public required string BaseUrl { get; set; }
-        public required string GetCategoriesUrl { get; set; }
-        public required string TableName { get; set; }
-        public required string PublishTopicArn { get; set; }
-        public required string PublishSubject { get; set; }
-        public required string PublishMessage { get; set; }
+        public string BaseUrl { get; set; } = null!;
+        public string GetCategoriesUrl { get; set; } = null!;
+        public string TableName { get; set; } = null!;
+        public string PublishTopicArn { get; set; } = null!;
+        public string PublishSubject { get; set; } = null!;
+        public string PublishMessage { get; set; } = null!;
     }
 }
