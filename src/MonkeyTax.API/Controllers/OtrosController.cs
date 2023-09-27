@@ -16,7 +16,7 @@ namespace MonkeyTax.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
         public IActionResult GetStatusAsync()
         {
-            return Ok(Task.FromResult(HttpStatusCode.OK.ToString()));
+            return Ok(HttpStatusCode.OK.ToString());
         }
     }
 }
