@@ -8,7 +8,7 @@ namespace MonkeyTax.Application.UserAgents.Services
     public class UserAgentService : IUserAgentService
     {
         private const string CACHE_KEY = "UserAgents";
-        private readonly TimeSpan _absoluteExpiration = TimeSpan.FromDays(30);
+        private readonly TimeSpan _absoluteExpiration = TimeSpan.FromHours(12);
 
         private static readonly Random _random = new();
 
