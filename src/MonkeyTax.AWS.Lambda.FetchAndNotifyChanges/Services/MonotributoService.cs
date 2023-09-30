@@ -37,6 +37,11 @@
             try
             {
                 RestRequest request = new(_config.GetCategoriesUrl);
+                string? cacheControlHeader = Environment.GetEnvironmentVariable("CACHE_CONTROL_HEADER");
+                if (!string.IsNullOrWhiteSpace(cacheControlHeader))
+                {
+                    request.AddHeader("Cache-Control", cacheControlHeader);
+                }
                 RestResponse<MonotributoResponse> result = await _restClient.ExecuteAsync<MonotributoResponse>(request, cancellationToken);
                 if (result.IsSuccessful)
                 {

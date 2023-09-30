@@ -21,7 +21,7 @@
     "function-subnets"             : "",
     "function-security-groups"     : "",
     "tracing-mode"                 : "PassThrough",
-    "environment-variables"        : "",
+    "environment-variables"        : "\"CACHE_CONTROL_HEADER\"=\"\"",
     "dockerfile"                   : "Dockerfile",
     "image-tag"                    : "monkeytax/lambdas:latest"
 }
