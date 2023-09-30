@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MonkeyTax.Application.Monotributo.Services.Monotributo;
 using MonkeyTax.Application.Monotributo.Services.Monotributo.Config;
+using MonkeyTax.Application.Proxies.Services;
 using MonkeyTax.Application.UserAgents.Services;
 
 namespace MonkeyTax.Bootstrap.Extensions
@@ -17,7 +18,9 @@ namespace MonkeyTax.Bootstrap.Extensions
             serviceCollection.AddScoped<IMonotributoService, MonotributoService>();
 
             string? userAgentsUrl = configuration["Scraper:UserAgentsUrl"];
+            string? getRandomProxyUrl = configuration["Scraper:ProxyUrl"];
             serviceCollection.AddScoped<IUserAgentService, UserAgentService>(x => new UserAgentService(userAgentsUrl, x.GetRequiredService<IMemoryCache>()));
+            serviceCollection.AddScoped<IProxyService, ProxyService>(x => new ProxyService(getRandomProxyUrl));
 
             return serviceCollection;
         }

@@ -21,7 +21,7 @@ namespace MonkeyTax.Application.UserAgents.Services
             _memoryCache = memoryCache;
         }
 
-        public async Task<string?> GetRandomUserAgent(CancellationToken cancellationToken = default)
+        public async Task<string?> GetRandomUserAgentAsync(CancellationToken cancellationToken = default)
         {
             try
             {

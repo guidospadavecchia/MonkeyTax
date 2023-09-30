@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Caching.Memory;
 using MonkeyTax.Application.Monotributo.Model;
 using MonkeyTax.Application.Monotributo.Services.Monotributo.Config;
+using MonkeyTax.Application.Proxies.Services;
 using MonkeyTax.Application.UserAgents.Services;
 using System.Globalization;
+using System.Net;
 
 namespace MonkeyTax.Application.Monotributo.Services.Monotributo
 {
@@ -13,12 +15,19 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
 
         private readonly MonotributoServiceConfig _config;
         private readonly IUserAgentService _userAgentService;
+        private readonly IProxyService _proxyService;
         private readonly IMemoryCache _memoryCache;
 
-        public MonotributoService(MonotributoServiceConfig config, IUserAgentService userAgentService, IMemoryCache memoryCache)
+        public MonotributoService(
+            MonotributoServiceConfig config,
+            IUserAgentService userAgentService,
+            IProxyService proxyService,
+            IMemoryCache memoryCache
+        )
         {
             _config = config;
             _userAgentService = userAgentService;
+            _proxyService = proxyService;
             _memoryCache = memoryCache;
         }
 
@@ -26,7 +35,7 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
 
         public async Task<HtmlDocument> LoadHtmlAsync(bool allowCache, CancellationToken cancellationToken = default)
         {
-            string? userAgent = await _userAgentService.GetRandomUserAgent(cancellationToken);
+            string? userAgent = await _userAgentService.GetRandomUserAgentAsync(cancellationToken);
                         
             if(allowCache && _memoryCache.TryGetValue(CACHE_KEY, out string html))
             {
@@ -36,8 +45,10 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
             }
 
             HtmlWeb web = new();
-            web.PreRequest += (request) =>
-            {
+            IWebProxy? proxy = await _proxyService.GetRandomProxyAsync(cancellationToken);
+            web.PreRequest += (HttpWebRequest request) =>
+            {                
+                request.Proxy = proxy;
                 foreach (var header in _config.Headers)
                 {
                     request.Headers.Add(header.Key, header.Value);
@@ -46,7 +57,6 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
                 {
                     request.Headers.Add("User-Agent", userAgent);
                 }
-
                 return true;
             };
             HtmlDocument document = await web.LoadFromWebAsync(_config.MonotributoUrl, cancellationToken);

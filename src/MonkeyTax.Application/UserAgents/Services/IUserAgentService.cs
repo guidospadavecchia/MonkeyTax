@@ -2,6 +2,6 @@
 {
     public interface IUserAgentService
     {
-        Task<string?> GetRandomUserAgent(CancellationToken cancellationToken = default);
+        Task<string?> GetRandomUserAgentAsync(CancellationToken cancellationToken = default);
     }
 }
