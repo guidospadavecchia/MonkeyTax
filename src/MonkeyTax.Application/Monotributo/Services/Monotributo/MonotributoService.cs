@@ -24,11 +24,11 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
 
         #region Private
 
-        public async Task<HtmlDocument> LoadHtmlAsync(CancellationToken cancellationToken = default)
+        public async Task<HtmlDocument> LoadHtmlAsync(bool allowCache, CancellationToken cancellationToken = default)
         {
             string? userAgent = await _userAgentService.GetRandomUserAgent(cancellationToken);
-            
-            if(_memoryCache.TryGetValue(CACHE_KEY, out string html))
+                        
+            if(allowCache && _memoryCache.TryGetValue(CACHE_KEY, out string html))
             {
                 HtmlDocument cachedDocument = new();
                 cachedDocument.LoadHtml(html);
@@ -88,11 +88,12 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
 
         #endregion
 
-        public async Task<MonotributoResponse> GetValuesAsync(CancellationToken cancellationToken = default)
+        public async Task<MonotributoResponse> GetValuesAsync(string? cacheControlHeader, CancellationToken cancellationToken = default)
         {
             List<MonotributoCategory> categories = new();
 
-            HtmlDocument document = await LoadHtmlAsync(cancellationToken);
+            bool allowCache = string.IsNullOrWhiteSpace(cacheControlHeader) || !cacheControlHeader.Equals("No-Cache", StringComparison.OrdinalIgnoreCase);
+            HtmlDocument document = await LoadHtmlAsync(allowCache, cancellationToken);
             HtmlNode table = document.DocumentNode.SelectSingleNode("//div[@id='vigentes']/div[2]/div[1]/table[1]/tbody[1]");
             HtmlNodeCollection rows = table.SelectNodes("tr");
             foreach (HtmlNode row in rows)

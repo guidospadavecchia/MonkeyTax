@@ -23,9 +23,9 @@ namespace MonkeyTax.API.Controllers
         [HttpGet("categorias")]
         [ProducesResponseType(typeof(MonotributoResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> GetCategoriasAsync(CancellationToken cancellationToken)
-        {
-            return Ok(await _monotributoService.GetValuesAsync(cancellationToken));
+        public async Task<IActionResult> GetCategoriasAsync([FromHeader(Name = "Cache-Control")] string? cacheControl = "No-Cache", CancellationToken cancellationToken = default)
+        {            
+            return Ok(await _monotributoService.GetValuesAsync(cacheControl, cancellationToken));
         }
     }
 }

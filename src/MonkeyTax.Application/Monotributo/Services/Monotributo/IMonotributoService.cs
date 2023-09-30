@@ -4,6 +4,6 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
 {
     public interface IMonotributoService
     {
-        Task<MonotributoResponse> GetValuesAsync(CancellationToken cancellationToken = default);
+        Task<MonotributoResponse> GetValuesAsync(string? cacheControlHeader, CancellationToken cancellationToken = default);
     }
 }
