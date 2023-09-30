@@ -42,6 +42,11 @@
                 {
                     request.AddHeader("Cache-Control", cacheControlHeader);
                 }
+                string? timeout = Environment.GetEnvironmentVariable("REQUEST_TIMEOUT_MILLISECONDS");
+                if (!string.IsNullOrWhiteSpace(timeout) && int.TryParse(timeout, out int n))
+                {
+                    request.Timeout = n;
+                }
                 RestResponse<MonotributoResponse> result = await _restClient.ExecuteAsync<MonotributoResponse>(request, cancellationToken);
                 if (result.IsSuccessful)
                 {
