@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace MonkeyTax.Bootstrap.Extensions
 {
@@ -14,7 +18,7 @@ namespace MonkeyTax.Bootstrap.Extensions
                 x.SwaggerDoc("v1", new()
                 {
                     Title = cfg["General:Title"],
-                    Description = "API REST de Monotributo AFIP (Argentina)",
+                    Description = cfg["General:Description"],
                     Contact = new()
                     {
                         Name = "GitHub Repo",
@@ -24,7 +28,8 @@ namespace MonkeyTax.Bootstrap.Extensions
                     {
                         Name = "Tabla de valores Monotributo AFIP",
                         Url = new(cfg["Scraper:MonotributoUrl"]!),
-                    }
+                    },
+                    Version = RuntimeInformation.FrameworkDescription,
                 });
                 x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{executingAssembly.GetName().Name}.xml"));
             });

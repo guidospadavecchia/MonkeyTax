@@ -3,8 +3,8 @@
     public class ErrorResponse
     {
         public int StatusCode { get; set; }
-        public string ErrorCode { get; set; } = null!;
-        public string ErrorMessage { get; set; } = null!;
+        public required string ErrorCode { get; set; }
+        public required string ErrorMessage { get; set; }
         public Exception? Exception { get; set; }
     }
 }

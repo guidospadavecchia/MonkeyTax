@@ -2,6 +2,6 @@
 {
     public sealed class MonotributoResponse
     {
-        public IEnumerable<MonotributoCategory> Categorias { get; set; } = Array.Empty<MonotributoCategory>();
+        public IEnumerable<MonotributoCategory> Categorias { get; set; } = [];
     }
 }
