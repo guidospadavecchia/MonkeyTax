@@ -1,14 +1,8 @@
 ﻿namespace MonkeyTax.Application.Monotributo.Model
 {
-    public sealed class MonotributoUnit<T>
+    public sealed class MonotributoUnit<T>(T valor, string unidad)
     {
-        public T Valor { get; set; }
-        public string Unidad { get; set; }
-
-        public MonotributoUnit(T valor, string unidad)
-        {
-            Valor = valor;
-            Unidad = unidad;
-        }
+        public T Valor { get; set; } = valor;
+        public string Unidad { get; set; } = unidad;
     }
 }

@@ -3,14 +3,9 @@ using System.Net;
 
 namespace MonkeyTax.Application.Proxies.Services
 {
-    public class ProxyService : IProxyService
+    public class ProxyService(string? url) : IProxyService
     {
-        private readonly RestClient? _client;
-
-        public ProxyService(string? url)
-        {
-            _client = !string.IsNullOrWhiteSpace(url) ? new RestClient(url) : null;
-        }
+        private readonly RestClient? _client = !string.IsNullOrWhiteSpace(url) ? new RestClient(url) : null;
 
         public async Task<WebProxy?> GetRandomProxyAsync(CancellationToken cancellationToken = default)
         {

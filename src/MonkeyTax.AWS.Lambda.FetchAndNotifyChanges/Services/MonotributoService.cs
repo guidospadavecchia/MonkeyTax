@@ -85,7 +85,7 @@
                 ScanIndexForward = false,
             };
             QueryResponse queryResponse = await _awsDynamoDbClient.QueryAsync(request, cancellationToken);
-            Dictionary<string, AttributeValue> values = queryResponse.Items.FirstOrDefault() ?? new();
+            Dictionary<string, AttributeValue> values = queryResponse.Items.FirstOrDefault() ?? [];
             if (values.Any())
             {
                 string actualContent = values["content"].S;

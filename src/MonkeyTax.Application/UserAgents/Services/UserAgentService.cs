@@ -5,21 +5,15 @@ using System.Text.Json;
 
 namespace MonkeyTax.Application.UserAgents.Services
 {
-    public class UserAgentService : IUserAgentService
+    public class UserAgentService(string? url, IMemoryCache memoryCache) : IUserAgentService
     {
         private const string CACHE_KEY = "UserAgents";
         private readonly TimeSpan _absoluteExpiration = TimeSpan.FromHours(12);
 
         private static readonly Random _random = new();
 
-        private readonly RestClient? _client;
-        private readonly IMemoryCache _memoryCache;
-
-        public UserAgentService(string? url, IMemoryCache memoryCache)
-        {
-            _client = !string.IsNullOrWhiteSpace(url) ? new RestClient(url) : null;
-            _memoryCache = memoryCache;
-        }
+        private readonly RestClient? _client = !string.IsNullOrWhiteSpace(url) ? new RestClient(url) : null;
+        private readonly IMemoryCache _memoryCache = memoryCache;
 
         public async Task<string?> GetRandomUserAgentAsync(CancellationToken cancellationToken = default)
         {

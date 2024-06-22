@@ -9,27 +9,19 @@ using System.Net;
 
 namespace MonkeyTax.Application.Monotributo.Services.Monotributo
 {
-    public class MonotributoService : IMonotributoService
+    public class MonotributoService(
+        MonotributoServiceConfig config,
+        IUserAgentService userAgentService,
+        IProxyService proxyService,
+        IMemoryCache memoryCache
+        ) : IMonotributoService
     {
         private const string CACHE_KEY = "Monotributo";
 
-        private readonly MonotributoServiceConfig _config;
-        private readonly IUserAgentService _userAgentService;
-        private readonly IProxyService _proxyService;
-        private readonly IMemoryCache _memoryCache;
-
-        public MonotributoService(
-            MonotributoServiceConfig config,
-            IUserAgentService userAgentService,
-            IProxyService proxyService,
-            IMemoryCache memoryCache
-        )
-        {
-            _config = config;
-            _userAgentService = userAgentService;
-            _proxyService = proxyService;
-            _memoryCache = memoryCache;
-        }
+        private readonly MonotributoServiceConfig _config = config;
+        private readonly IUserAgentService _userAgentService = userAgentService;
+        private readonly IProxyService _proxyService = proxyService;
+        private readonly IMemoryCache _memoryCache = memoryCache;
 
         #region Private
 
@@ -100,7 +92,7 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
 
         public async Task<MonotributoResponse> GetValuesAsync(string? cacheControlHeader, CancellationToken cancellationToken = default)
         {
-            List<MonotributoCategory> categories = new();
+            List<MonotributoCategory> categories = [];
 
             bool allowCache = string.IsNullOrWhiteSpace(cacheControlHeader) || !cacheControlHeader.Equals("No-Cache", StringComparison.OrdinalIgnoreCase);
             HtmlDocument document = await LoadHtmlAsync(allowCache, cancellationToken);
@@ -108,32 +100,48 @@ namespace MonkeyTax.Application.Monotributo.Services.Monotributo
             HtmlNodeCollection rows = table.SelectNodes("tr");
             foreach (HtmlNode row in rows)
             {
-                categories.Add(new()
+                HtmlNode? nodeCategoria = row.SelectSingleNode("th");
+                HtmlNode? nodeIngresosBrutosAnuales = row.SelectSingleNode("td[contains(@headers,'th_ing_br_t15')]");
+                HtmlNode? nodeActividad = row.SelectSingleNode("td[contains(@headers,'th_act_t15')]");
+                //HtmlNode? nodeCantidadMinimaDeEmpleados = row.SelectSingleNode("td[contains(@headers,'th_cant_min_emp_t15')]");
+                HtmlNode? nodeSuperficieMaximaAfectada = row.SelectSingleNode("td[contains(@headers,'th_sup_af_t15')]");
+                HtmlNode? nodeEnergiaElectricaMaximaAnual = row.SelectSingleNode("td[contains(@headers,'th_energ_t15')]");
+                HtmlNode? nodeAlquileresDevengadosAnuales = row.SelectSingleNode("td[contains(@headers,'th_alq_t15')]");
+                HtmlNode? nodePrecioUnitarioMaximoVentaCosasMuebles = row.SelectSingleNode("td[contains(@headers,'th_venta_cosas_muebles_t15')]");
+                HtmlNode? nodeImpuestoIntegradoServicios = row.SelectSingleNode("td[contains(@headers,'th_imp_int_loc_t15')]");
+                HtmlNode? nodeImpuestoIntegradoVentaCosasMuebles = row.SelectSingleNode("td[contains(@headers,'th_imp_int_ven_t15')]");
+                HtmlNode? nodeAportesMensualesSistemaPrevisional = row.SelectSingleNode("td[contains(@headers,'th_ap_sipa_t15')]");
+                HtmlNode? nodeAportesMensualesObraSocial = row.SelectSingleNode("td[contains(@headers,'th_ap_obra_soc_t15')]");
+                HtmlNode? nodeCostosMensualesPrestacionServicios = row.SelectSingleNode("td[contains(@headers,'th_total_loc_t15')]");
+                HtmlNode? nodeCostosMensualesVentaCosasMuebles = row.SelectSingleNode("td[contains(@headers,'th_total_ven_t15')]");
+                
+                MonotributoCategory category = new()
                 {
-                    Categoria = row.SelectSingleNode("th").InnerText,
-                    IngresosBrutosAnuales = ParseCurrency(row.SelectSingleNode("td[contains(@headers,'th_ing_br_t15')]")),
-                    Actividad = row.SelectSingleNode("td[contains(@headers,'th_act_t15')]").InnerText,
-                    CantidadMinimaDeEmpleados = row.SelectSingleNode("td[contains(@headers,'th_cant_min_emp_t15')]").InnerText,
-                    SuperficieMaximaAfectada = ParseIntUnit(row.SelectSingleNode("td[contains(@headers,'th_sup_af_t15')]")),
-                    EnergiaElectricaMaximaAnual = ParseIntUnit(row.SelectSingleNode("td[contains(@headers,'th_energ_t15')]")),
-                    AlquileresDevengadosAnuales = ParseCurrency(row.SelectSingleNode("td[contains(@headers,'th_alq_t15')]")),
-                    PrecioUnitarioMaximoVentaCosasMuebles = ParseCurrency(row.SelectSingleNode("td[contains(@headers,'th_venta_cosas_muebles_t15')]")),
+                    Categoria = nodeCategoria?.InnerText ?? string.Empty,
+                    IngresosBrutosAnuales = ParseCurrency(nodeIngresosBrutosAnuales),
+                    Actividad = nodeActividad?.InnerText ?? string.Empty,
+                    //CantidadMinimaDeEmpleados = nodeCantidadMinimaDeEmpleados?.InnerText ?? string.Empty,
+                    SuperficieMaximaAfectada = ParseIntUnit(nodeSuperficieMaximaAfectada),
+                    EnergiaElectricaMaximaAnual = ParseIntUnit(nodeEnergiaElectricaMaximaAnual),
+                    AlquileresDevengadosAnuales = ParseCurrency(nodeAlquileresDevengadosAnuales),
+                    PrecioUnitarioMaximoVentaCosasMuebles = ParseCurrency(nodePrecioUnitarioMaximoVentaCosasMuebles),
                     ImpuestoIntegrado = new()
                     {
-                        Servicios = ParseCurrency(row.SelectSingleNode("td[contains(@headers,'th_imp_int_loc_t15')]")),
-                        VentaCosasMuebles = ParseCurrency(row.SelectSingleNode("td[contains(@headers,'th_imp_int_ven_t15')]")),
+                        Servicios = ParseCurrency(nodeImpuestoIntegradoServicios),
+                        VentaCosasMuebles = ParseCurrency(nodeImpuestoIntegradoVentaCosasMuebles),
                     },
                     AportesMensuales = new()
                     {
-                        SistemaPrevisional = ParseCurrency(row.SelectSingleNode("td[contains(@headers,'th_ap_sipa_t15')]")),
-                        ObraSocial = ParseCurrency(row.SelectSingleNode("td[contains(@headers,'th_ap_obra_soc_t15')]")),
+                        SistemaPrevisional = ParseCurrency(nodeAportesMensualesSistemaPrevisional),
+                        ObraSocial = ParseCurrency(nodeAportesMensualesObraSocial),
                     },
                     CostosMensuales = new()
                     {
-                        PrestacionServicios = ParseCurrency(row.SelectSingleNode("td[contains(@headers,'th_total_loc_t15')]")),
-                        VentaCosasMuebles = ParseCurrency(row.SelectSingleNode("td[contains(@headers,'th_total_ven_t15')]")),
+                        PrestacionServicios = ParseCurrency(nodeCostosMensualesPrestacionServicios),
+                        VentaCosasMuebles = ParseCurrency(nodeCostosMensualesVentaCosasMuebles),
                     },
-                });
+                };
+                categories.Add(category);
             }
 
             return new()

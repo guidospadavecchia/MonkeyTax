@@ -3,6 +3,6 @@
     public sealed class MonotributoServiceConfig
     {
         public string MonotributoUrl { get; set; } = null!;
-        public Dictionary<string, string> Headers { get; set; } = new();
+        public Dictionary<string, string> Headers { get; set; } = [];
     }
 }
