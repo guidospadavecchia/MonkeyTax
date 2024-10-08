@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
     <PackageReference Include="LazyCache" Version="2.4.0" />
-    <PackageReference Include="RestSharp" Version="111.3.0" />
+    <PackageReference Include="RestSharp" Version="112.0.0" />
   </ItemGroup>
 
 </Project>
